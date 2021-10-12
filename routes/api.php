@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('whatsapp-ping', 'WappinController@ping');
-Route::get('whatsapp-get-external-ip','WappinController@getExternalIP');
-Route::post('whatsapp-get-token','WappinController@getToken');
-Route::post('whatsapp-send-notification','WappinController@sendNotification');
+Route::get('whatsapp-get-external-ip', 'WappinController@getExternalIP');
+Route::post('whatsapp-get-token', 'WappinController@getToken');
+Route::post('whatsapp-send-notification', 'WappinController@sendNotification');
+Route::post('whatsapp-send-notification-with-media', 'WappinController@sendNotificationWithMedia');
