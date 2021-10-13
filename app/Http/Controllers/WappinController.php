@@ -69,19 +69,19 @@ class WappinController extends Controller
 
     public function sendNotificationWithMedia(Request $request)
     {
-        // $token = $this->getToken($request)->getData()->data->token;
+        $token = $this->getToken($request)->getData()->data->token;
 
-        // $resBody = Http::withToken($token)
-        //     ->attach('media', base64_decode($request->media), 'image.png')
-        //     ->post(env('WAPPIN_URL').'/v1/message/do-send-hsm-with-media', $request->all());
+        $resBody = Http::withToken($token)
+            ->attach('media', base64_decode($request->media), 'image.png')
+            ->post(env('WAPPIN_URL').'/v1/message/do-send-hsm-with-media', $request->all());
         
-        // $arrResBody = json_decode($resBody->body(), true);
+        $arrResBody = json_decode($resBody->body(), true);
 
-        // if($arrResBody['status'] == 200){
-        //     $msg = 'Notification with media has been sent successfully';
-        //     return response()->json(['success'=>true, 'message'=>$msg], $arrResBody['status']);
-        // }else{
-        //     return response()->json(['success'=>false, 'message'=>$arrResBody['message']], $arrResBody['status']);
-        // }
+        if($arrResBody['status'] == 200){
+            $msg = 'Notification with media has been sent successfully';
+            return response()->json(['success'=>true, 'message'=>$msg], $arrResBody['status']);
+        }else{
+            return response()->json(['success'=>false, 'message'=>$arrResBody['message']], $arrResBody['status']);
+        }
     }
 }
