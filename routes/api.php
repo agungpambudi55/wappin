@@ -23,3 +23,5 @@ Route::get('whatsapp-get-external-ip', 'WappinController@getExternalIP');
 Route::post('whatsapp-get-token', 'WappinController@getToken');
 Route::post('whatsapp-send-notification', 'WappinController@sendNotification');
 Route::post('whatsapp-send-notification-with-media', 'WappinController@sendNotificationWithMedia');
+Route::post('whatsapp-inquiry', 'WappinController@inquiry');
+Route::get('whatsapp-callback', 'WappinController@callback');

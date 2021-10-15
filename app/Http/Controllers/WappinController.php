@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\Whatsapp;
 
 class WappinController extends Controller
 {
@@ -61,7 +62,8 @@ class WappinController extends Controller
 
         if($arrResBody['status'] == 200){
             $msg = 'Notification has been sent successfully';
-            return response()->json(['success'=>true, 'message'=>$msg], $arrResBody['status']);
+            $data = array('message_id'=>$arrResBody['message_id']);
+            return response()->json(['success'=>true, 'message'=>$msg, 'data'=>$data], $arrResBody['status']);
         }else{
             return response()->json(['success'=>false, 'message'=>$arrResBody['message']], $arrResBody['status']);
         }
@@ -79,9 +81,30 @@ class WappinController extends Controller
 
         if($arrResBody['status'] == 200){
             $msg = 'Notification with media has been sent successfully';
-            return response()->json(['success'=>true, 'message'=>$msg], $arrResBody['status']);
+            $data = array('message_id'=>$arrResBody['message_id']);
+            return response()->json(['success'=>true, 'message'=>$msg, 'data'=>$data], $arrResBody['status']);
         }else{
             return response()->json(['success'=>false, 'message'=>$arrResBody['message']], $arrResBody['status']);
         }
+    }
+
+    public function inquiry(Request $request){
+        $token = $this->getToken($request)->getData()->data->token;
+
+        $resBody = Http::withToken($token)->post(env('WAPPIN_URL').'/v1/message/inquiry', $request->all());
+
+        $arrResBody = json_decode($resBody->body(), true);
+
+        if($arrResBody['status'] == 200){
+            $msg = 'Check the status of messages';
+            $data = array('message_id'=>$arrResBody['message_id'], 'message_status'=>$arrResBody['data']);
+            return response()->json(['success'=>true, 'message'=>$msg, 'data'=>$data], $arrResBody['status']);
+        }else{
+            return response()->json(['success'=>false, 'message'=>$arrResBody['message']], $arrResBody['status']);
+        }
+    }
+
+    public function callback(Request $request){
+        $whatsapp = Whatsapp::create($request->all());
     }
 }
