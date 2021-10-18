@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Whatsapp;
+use Illuminate\Support\Str;
 
 class WappinController extends Controller
 {
@@ -163,6 +164,19 @@ class WappinController extends Controller
                         'project_id' => '2036',
                         'recipient_number' => '6285853352902',
                         'message_content' => 'Konfirmasi diterima.'
+                    ]);
+        
+                $this->sendMessage($reqBody);
+            }else if(Str::contains($request->message_content, 'DO-AGRS-')){
+                $noDO = $request->message_content;
+                $reqBody = new Request();
+                $reqBody->setMethod('POST');
+                $reqBody->request->add([
+                        'client_id' => '0317',
+                        'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                        'project_id' => '2036',
+                        'recipient_number' => '6285853352902',
+                        'message_content' => 'DO anda dengan nomor '.$noDO.' telah sampai tempat A.'
                     ]);
         
                 $this->sendMessage($reqBody);
