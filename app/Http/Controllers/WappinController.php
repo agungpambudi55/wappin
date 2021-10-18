@@ -141,18 +141,34 @@ class WappinController extends Controller
     }
 
     public function callback(Request $request){
-        $reqBody = new Request();
-        $reqBody->setMethod('POST');
-        $reqBody->request->add([            
-                'client_id' => '0317',
-                'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                'project_id' => '2036',
-                'recipient_number' => '6285853352902',
-                'message_content' => json_encode($request->all())
-            ]);
-
-        $this->sendMessage($reqBody);
-
+        if($request->has('message_content')){
+            if($request->message_content == 'Agung'){
+                $reqBody = new Request();
+                $reqBody->setMethod('POST');
+                $reqBody->request->add([            
+                        'client_id' => '0317',
+                        'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                        'project_id' => '2036',
+                        'recipient_number' => '6285853352902',
+                        'message_content' => 'Pambudi'
+                    ]);
+        
+                $this->sendMessage($reqBody);
+            }else if($request->message_content == 'Konfirmasi'){
+                $reqBody = new Request();
+                $reqBody->setMethod('POST');
+                $reqBody->request->add([            
+                        'client_id' => '0317',
+                        'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                        'project_id' => '2036',
+                        'recipient_number' => '6285853352902',
+                        'message_content' => 'Konfirmasi diterima.'
+                    ]);
+        
+                $this->sendMessage($reqBody);
+            }
+        }
+        // 'message_content' => json_encode($request->all())
         // $whatsapp = Whatsapp::create($request->all());
     }
 }
