@@ -150,7 +150,7 @@ class WappinController extends Controller
                         'client_id' => '0317',
                         'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                         'project_id' => '2036',
-                        'recipient_number' => '6285853352902',
+                        'recipient_number' => $request->sender_number,
                         'message_content' => 'Pambudi'
                     ]);
         
@@ -162,27 +162,37 @@ class WappinController extends Controller
                         'client_id' => '0317',
                         'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                         'project_id' => '2036',
-                        'recipient_number' => '6285853352902',
+                        'recipient_number' => $request->sender_number,
                         'message_content' => 'Konfirmasi diterima.'
                     ]);
         
                 $this->sendMessage($reqBody);
             }else if(Str::contains($request->message_content, 'DO-AGRS-')){
-                $noDO = $request->message_content;
                 $reqBody = new Request();
                 $reqBody->setMethod('POST');
                 $reqBody->request->add([
                         'client_id' => '0317',
                         'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                         'project_id' => '2036',
-                        'recipient_number' => '6285853352902',
-                        'message_content' => 'DO anda dengan nomor '.$noDO.' telah sampai tempat A.'
+                        'recipient_number' => $request->sender_number,
+                        'message_content' => 'DO anda dengan nomor '.$request->message_content.' telah sampai tempat A.'
                     ]);
         
                 $this->sendMessage($reqBody);
             }
         }
-        // 'message_content' => json_encode($request->all())
+
+        // $reqBody = new Request();
+        // $reqBody->setMethod('POST');
+        // $reqBody->request->add([
+        //         'client_id' => '0317',
+        //         'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+        //         'project_id' => '2036',
+        //         'recipient_number' => '6285853352902',
+        //         'message_content' => json_encode($request->all())
+        //     ]);
+
+        // $this->sendMessage($reqBody);
         // $whatsapp = Whatsapp::create($request->all());
     }
 }
