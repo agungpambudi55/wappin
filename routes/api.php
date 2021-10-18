@@ -27,3 +27,4 @@ Route::post('whatsapp-send-message', 'WappinController@sendMessage');
 Route::post('whatsapp-send-message-media', 'WappinController@sendMessageMedia');
 Route::post('whatsapp-inquiry', 'WappinController@inquiry');
 Route::get('whatsapp-callback', 'WappinController@callback');
+Route::post('whatsapp-callback', 'WappinController@callback');
