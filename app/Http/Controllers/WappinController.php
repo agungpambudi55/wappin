@@ -69,7 +69,7 @@ class WappinController extends Controller
         }
     }
 
-    public function sendNotificationWithMedia(Request $request)
+    public function sendNotificationMedia(Request $request)
     {
         $token = $this->getToken($request)->getData()->data->token;
 
@@ -77,6 +77,42 @@ class WappinController extends Controller
             ->attach('media', base64_decode($request->media), 'image.png')
             ->post(env('WAPPIN_URL').'/v1/message/do-send-hsm-with-media', $request->all());
         
+        $arrResBody = json_decode($resBody->body(), true);
+
+        if($arrResBody['status'] == 200){
+            $msg = 'Notification with media has been sent successfully';
+            $data = array('message_id'=>$arrResBody['message_id']);
+            return response()->json(['success'=>true, 'message'=>$msg, 'data'=>$data], $arrResBody['status']);
+        }else{
+            return response()->json(['success'=>false, 'message'=>$arrResBody['message']], $arrResBody['status']);
+        }
+    }
+
+    public function sendMessage(Request $request)
+    {
+        $token = $this->getToken($request)->getData()->data->token;
+
+        $resBody = Http::withToken($token)->post(env('WAPPIN_URL').'/v1/message/do-send', $request->all());
+        
+        $arrResBody = json_decode($resBody->body(), true);
+
+        if($arrResBody['status'] == 200){
+            $msg = 'Message has been sent successfully';
+            $data = array('message_id'=>$arrResBody['message_id']);
+            return response()->json(['success'=>true, 'message'=>$msg, 'data'=>$data], $arrResBody['status']);
+        }else{
+            return response()->json(['success'=>false, 'message'=>$arrResBody['message']], $arrResBody['status']);
+        }
+    }
+
+    public function sendMessageMedia(Request $request)
+    {
+        $token = $this->getToken($request)->getData()->data->token;
+
+        $resBody = Http::withToken($token)
+            ->attach('media', base64_decode($request->media), 'image.png')
+            ->post(env('WAPPIN_URL').'/v1/message/do-send-media', $request->all());
+
         $arrResBody = json_decode($resBody->body(), true);
 
         if($arrResBody['status'] == 200){
@@ -105,6 +141,18 @@ class WappinController extends Controller
     }
 
     public function callback(Request $request){
-        $whatsapp = Whatsapp::create($request->all());
+        $reqBody = new Request();
+        $reqBody->setMethod('POST');
+        $reqBody->request->add([            
+                'client_id' => '0317',
+                'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                'project_id' => '2036',
+                'recipient_number' => '6285853352902',
+                'message_content' => json_encode($request->all())
+            ]);
+
+        $this->sendMessage($reqBody);
+
+        // $whatsapp = Whatsapp::create($request->all());
     }
 }
