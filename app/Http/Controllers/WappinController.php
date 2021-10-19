@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class WappinController extends Controller
 {
+    // Fungsi untuk melakukan ping ke API Wappin, mengecek apakah berfungsi atau tidak
     public function ping()
     {
         $resBody = Http::get(env('WAPPIN_URL'));
@@ -22,6 +23,7 @@ class WappinController extends Controller
         }
     }
 
+    // Fungsi untuk mendapatkan alamat IP eksternal dari PC atau server yang kita pakai
     public function getExternalIP()
     {
         $externalIP = file_get_contents('http://ipecho.net/plain');
@@ -29,16 +31,17 @@ class WappinController extends Controller
         return response()->json(['success'=>true, 'message'=>'External IP address is '.$externalIP, 'data'=>$externalIP], 200);
     }
 
+    // Fungsi untuk mendapatkan token, token tersebut digunakan sebagai Auth Bearer pada API lainnya
     public function getToken(Request $request)
     {
-        $username = $request->client_id;
-        $password = $request->secret_key;
+        $username = $request->client_id;    // sebagai username dari Auht Basic
+        $password = $request->secret_key;   // sebagai password dari Auth Basic
 
         $resBody = Http::withBasicAuth($username, $password)->post(env('WAPPIN_URL').'/v1/token/get');
 
         $arrResBody = json_decode($resBody->body(), true);
         $expiredDate = $arrResBody['data']['expired_datetime'];
-        $expired = (date('Y-m-d H:m:s')>=$expiredDate)?true:false;
+        $expired = (date('Y-m-d H:m:s')>=$expiredDate)?true:false; // return status expired date dari token
 
         $data = array(
                 'expired' => $expired,
@@ -53,8 +56,10 @@ class WappinController extends Controller
         }
     }
 
+    // Fungsi untuk mengirim notifikasi atau blast berisi hanya teks, menggunakan template yang sudah disetujui Facebook
     public function sendNotification(Request $request)
     {
+        // Mendapatkan token menggunakan fungsi getToken() sebagai parameter API Wappin
         $token = $this->getToken($request)->getData()->data->token;
 
         $resBody = Http::withToken($token)->post(env('WAPPIN_URL').'/v1/message/do-send-hsm', $request->all());
@@ -70,8 +75,10 @@ class WappinController extends Controller
         }
     }
 
+    // Fungsi untuk mengirim notifikasi atau blast dengan media, menggunakan template yang sudah disetujui Facebook
     public function sendNotificationMedia(Request $request)
     {
+        // Mendapatkan token menggunakan fungsi getToken() sebagai parameter API Wappin
         $token = $this->getToken($request)->getData()->data->token;
 
         $resBody = Http::withToken($token)
@@ -89,8 +96,10 @@ class WappinController extends Controller
         }
     }
 
+    // Fungsi untuk mengirim pesan berisi hanya teks, perlu trigger terlebih dahulu
     public function sendMessage(Request $request)
     {
+        // Mendapatkan token menggunakan fungsi getToken() sebagai parameter API Wappin
         $token = $this->getToken($request)->getData()->data->token;
 
         $resBody = Http::withToken($token)->post(env('WAPPIN_URL').'/v1/message/do-send', $request->all());
@@ -106,8 +115,10 @@ class WappinController extends Controller
         }
     }
 
+    // Fungsi untuk mengirim pesan dengan media, perlu trigger terlebih dahulu
     public function sendMessageMedia(Request $request)
     {
+        // Mendapatkan token menggunakan fungsi getToken() sebagai parameter API Wappin
         $token = $this->getToken($request)->getData()->data->token;
 
         $resBody = Http::withToken($token)
@@ -125,7 +136,10 @@ class WappinController extends Controller
         }
     }
 
-    public function inquiry(Request $request){
+    // Fungsi cek status dari sebuah pesan, berdasarkan id pesan tersebut
+    public function inquiry(Request $request)
+    {
+        // Mendapatkan token menggunakan fungsi getToken() sebagai parameter API Wappin
         $token = $this->getToken($request)->getData()->data->token;
 
         $resBody = Http::withToken($token)->post(env('WAPPIN_URL').'/v1/message/inquiry', $request->all());
@@ -141,9 +155,12 @@ class WappinController extends Controller
         }
     }
 
-    public function callback(Request $request){
+    // Fungsi callback fitur notifikasi, berisi konten dan status (sent, delivered, read) dari pesan blast notifikasi
+    public function callback(Request $request)
+    {
         if($request->has('message_id')){
-            if(Whatsapp::where('message_id','=',$request->message_id)->exists()){
+            // Jika pesan sudah ada maka muat dari DB untuk perbarui status, jika belum ada maka tambahkan ke DB
+            if(Whatsapp::where('message_id','=',$request->message_id)->exists()){ 
                 $message = Whatsapp::where('message_id','=',$request->message_id)->first();
             }else{
                 $message = new Whatsapp();
@@ -154,6 +171,7 @@ class WappinController extends Controller
                 $message->message_content = $request->message_content;
             }
 
+            // Status diisi sesuai callback dari Wappin
             if($request->status_messages == 'sent'){
                 $message->message_sent_at = date('Y-m-d H:i:s', $request->timestamp);
             }else if($request->status_messages == 'delivered'){
