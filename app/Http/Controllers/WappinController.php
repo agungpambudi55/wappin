@@ -171,7 +171,7 @@ class WappinController extends Controller
                 $message->message_content = $request->message_content;
             }
 
-            // Status diisi sesuai callback dari Wappin
+            // Status diisi sesuai callback dari Wappin, timestamp dikonversi ke datetime
             if($request->status_messages == 'sent'){
                 $message->message_sent_at = date('Y-m-d H:i:s', $request->timestamp);
             }else if($request->status_messages == 'delivered'){
