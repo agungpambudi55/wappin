@@ -142,18 +142,27 @@ class WappinController extends Controller
     }
 
     public function callback(Request $request){
-        if($request->has('message_content')){
-            if($request->filled('message_content')){
-                $whatsapp = new Whatsapp();
-                $whatsapp->message_id = $request->message_id;
-                $whatsapp->client_id = $request->client_id;
-                $whatsapp->project_id = $request->project_id;
-                $whatsapp->telephone = $request->sender_number;
-                $whatsapp->message_content = $request->message_content;
-                $whatsapp->status_messages = $request->status_messages;
-                $whatsapp->timestamp = $request->timestamp;
-                $whatsapp->save();
+        if($request->has('message_id')){
+            if(Whatsapp::where('message_id','=',$request->message_id)->exists()){
+                $message = Whatsapp::where('message_id','=',$request->message_id)->first();
+            }else{
+                $message = new Whatsapp();
+                $message->message_id = $request->message_id;
+                $message->client_id = $request->client_id;
+                $message->project_id = $request->project_id;
+                $message->telephone = $request->sender_number;
+                $message->message_content = $request->message_content;
             }
+
+            if($request->status_messages == 'sent'){
+                $message->message_sent_at = date('Y/m/d H:i:s', $request->timestamp);
+            }else if($request->status_messages == 'delivered'){
+                $message->message_delivered_at = date('Y/m/d H:i:s', $request->timestamp);
+            }else if($request->status_messages == 'read'){
+                $message->message_read_at = date('Y/m/d H:i:s', $request->timestamp);
+            }
+
+            $message->save();
         }
     }
 

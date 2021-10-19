@@ -20,8 +20,9 @@ class CreateWhatsappsTable extends Migration
             $table->string('project_id')->nullable();
             $table->string('telephone')->nullable();
             $table->string('message_content')->nullable();
-            $table->string('status_messages')->nullable();
-            $table->string('timestamp')->nullable();
+            $table->string('message_sent_at')->nullable();
+            $table->string('message_delivered_at')->nullable();
+            $table->string('message_read_at')->nullable();
             $table->timestamps();
         });
     }
