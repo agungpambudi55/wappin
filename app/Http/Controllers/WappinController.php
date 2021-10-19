@@ -143,56 +143,20 @@ class WappinController extends Controller
 
     public function callback(Request $request){
         if($request->has('message_content')){
-            if($request->message_content == 'Agung'){
-                $reqBody = new Request();
-                $reqBody->setMethod('POST');
-                $reqBody->request->add([            
-                        'client_id' => '0317',
-                        'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                        'project_id' => '2036',
-                        'recipient_number' => $request->sender_number,
-                        'message_content' => 'Pambudi'
-                    ]);
-        
-                $this->sendMessage($reqBody);
-            }else if($request->message_content == 'Konfirmasi'){
-                $reqBody = new Request();
-                $reqBody->setMethod('POST');
-                $reqBody->request->add([            
-                        'client_id' => '0317',
-                        'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                        'project_id' => '2036',
-                        'recipient_number' => $request->sender_number,
-                        'message_content' => 'Konfirmasi diterima.'
-                    ]);
-        
-                $this->sendMessage($reqBody);
-            }else if(Str::contains($request->message_content, 'DO-AGRS-')){
-                $reqBody = new Request();
-                $reqBody->setMethod('POST');
-                $reqBody->request->add([
-                        'client_id' => '0317',
-                        'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                        'project_id' => '2036',
-                        'recipient_number' => $request->sender_number,
-                        'message_content' => 'DO anda dengan nomor '.$request->message_content.' telah sampai tempat A.'
-                    ]);
-        
-                $this->sendMessage($reqBody);
+            if($request->filled('message_content')){
+                $whatsapp = new Whatsapp();
+                $whatsapp->message_id = $request->message_id;
+                $whatsapp->client_id = $request->client_id;
+                $whatsapp->project_id = $request->project_id;
+                $whatsapp->telephone = $request->sender_number;
+                $whatsapp->message_content = $request->message_content;
+                $whatsapp->status_messages = $request->status_messages;
+                $whatsapp->timestamp = $request->timestamp;
+                $whatsapp->save();
             }
         }
+    }
 
-        // $reqBody = new Request();
-        // $reqBody->setMethod('POST');
-        // $reqBody->request->add([
-        //         'client_id' => '0317',
-        //         'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-        //         'project_id' => '2036',
-        //         'recipient_number' => '6285853352902',
-        //         'message_content' => json_encode($request->all())
-        //     ]);
-
-        // $this->sendMessage($reqBody);
-        // $whatsapp = Whatsapp::create($request->all());
+    public function webhook(Request $request){
     }
 }

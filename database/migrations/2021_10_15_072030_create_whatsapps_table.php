@@ -17,15 +17,11 @@ class CreateWhatsappsTable extends Migration
             $table->id();
             $table->string('message_id')->nullable();
             $table->string('client_id')->nullable();
-            $table->string('client_name')->nullable();
             $table->string('project_id')->nullable();
-            $table->string('project_name')->nullable();
-            $table->string('sender_number')->nullable();
-            $table->string('status_messages')->nullable();
+            $table->string('telephone')->nullable();
             $table->string('message_content')->nullable();
-            $table->string('environment')->nullable();
+            $table->string('status_messages')->nullable();
             $table->string('timestamp')->nullable();
-            $table->string('callback_type')->nullable();
             $table->timestamps();
         });
     }
