@@ -155,11 +155,11 @@ class WappinController extends Controller
             }
 
             if($request->status_messages == 'sent'){
-                $message->message_sent_at = date('Y/m/d H:i:s', $request->timestamp);
+                $message->message_sent_at = date('Y-m-d H:i:s', $request->timestamp);
             }else if($request->status_messages == 'delivered'){
-                $message->message_delivered_at = date('Y/m/d H:i:s', $request->timestamp);
+                $message->message_delivered_at = date('Y-m-d H:i:s', $request->timestamp);
             }else if($request->status_messages == 'read'){
-                $message->message_read_at = date('Y/m/d H:i:s', $request->timestamp);
+                $message->message_read_at = date('Y-m-d H:i:s', $request->timestamp);
             }
 
             $message->save();
