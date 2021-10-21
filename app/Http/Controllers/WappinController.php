@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Models\Whatsapp;
+use App\Models\WhatsappNotification;
 use Illuminate\Support\Str;
 
 class WappinController extends Controller
@@ -156,14 +156,14 @@ class WappinController extends Controller
     }
 
     // Fungsi callback fitur notifikasi, berisi konten dan status (sent, delivered, read) dari pesan blast notifikasi
-    public function callback(Request $request)
+    public function callbackNotification(Request $request)
     {
         if($request->has('message_id')){
             // Jika pesan sudah ada maka muat dari DB untuk perbarui status, jika belum ada maka tambahkan ke DB
-            if(Whatsapp::where('message_id','=',$request->message_id)->exists()){ 
-                $message = Whatsapp::where('message_id','=',$request->message_id)->first();
+            if(WhatsappNotification::where('message_id','=',$request->message_id)->exists()){ 
+                $message = WhatsappNotification::where('message_id','=',$request->message_id)->first();
             }else{
-                $message = new Whatsapp();
+                $message = new WhatsappNotification();
                 $message->message_id = $request->message_id;
                 $message->client_id = $request->client_id;
                 $message->project_id = $request->project_id;
@@ -184,6 +184,6 @@ class WappinController extends Controller
         }
     }
 
-    public function webhook(Request $request){
+    public function webhookChatbot(Request $request){
     }
 }

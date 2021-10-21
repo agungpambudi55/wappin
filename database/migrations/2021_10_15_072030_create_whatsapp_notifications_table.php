@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWhatsappsTable extends Migration
+class CreateWhatsappNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWhatsappsTable extends Migration
      */
     public function up()
     {
-        Schema::create('whatsapps', function (Blueprint $table) {
+        Schema::create('whatsapp_notifications', function (Blueprint $table) {
             $table->id();
             $table->string('message_id')->nullable();
             $table->string('client_id')->nullable();
