@@ -26,7 +26,5 @@ Route::post('whatsapp-send-notification-media', 'WappinController@sendNotificati
 Route::post('whatsapp-send-message', 'WappinController@sendMessage');
 Route::post('whatsapp-send-message-media', 'WappinController@sendMessageMedia');
 Route::post('whatsapp-inquiry', 'WappinController@inquiry');
-Route::get('whatsapp-callback-notification', 'WappinController@callbackNotification');
 Route::post('whatsapp-callback-notification', 'WappinController@callbackNotification');
-Route::get('whatsapp-webhook-chatbot', 'WappinController@webhookChatbot');
-Route::post('whatsapp-webhook-chatbot', 'WappinController@webhookChatbot');
+Route::post('whatsapp-callback-chatbot', 'WappinController@callbackChatbot');

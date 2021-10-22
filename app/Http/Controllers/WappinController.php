@@ -168,22 +168,34 @@ class WappinController extends Controller
                 $message->client_id = $request->client_id;
                 $message->project_id = $request->project_id;
                 $message->telephone = $request->sender_number;
-                $message->message_content = $request->message_content;
+                $message->content = $request->message_content;
             }
 
             // Status diisi sesuai callback dari Wappin, timestamp dikonversi ke datetime
             if($request->status_messages == 'sent'){
-                $message->message_sent_at = date('Y-m-d H:i:s', $request->timestamp);
+                $message->sent_at = date('Y-m-d H:i:s', $request->timestamp);
             }else if($request->status_messages == 'delivered'){
-                $message->message_delivered_at = date('Y-m-d H:i:s', $request->timestamp);
+                $message->delivered_at = date('Y-m-d H:i:s', $request->timestamp);
             }else if($request->status_messages == 'read'){
-                $message->message_read_at = date('Y-m-d H:i:s', $request->timestamp);
+                $message->read_at = date('Y-m-d H:i:s', $request->timestamp);
             }
 
             $message->save();
         }
     }
 
-    public function webhookChatbot(Request $request){
+    // Fungsi callback fitur chatbot
+    public function callbackChatbot(Request $request){
+        if($request->has('messages')){
+            // 
+        }
+        
+        if($request->has('statuses')){
+            // 
+        }
+
+        if($request->has('errors')){
+            // 
+        }
     }
 }

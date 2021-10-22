@@ -19,10 +19,10 @@ class CreateWhatsappNotificationsTable extends Migration
             $table->string('client_id')->nullable();
             $table->string('project_id')->nullable();
             $table->string('telephone')->nullable();
-            $table->string('message_content')->nullable();
-            $table->string('message_sent_at')->nullable();
-            $table->string('message_delivered_at')->nullable();
-            $table->string('message_read_at')->nullable();
+            $table->text('content')->nullable();
+            $table->dateTime('sent_at')->nullable();
+            $table->dateTime('delivered_at')->nullable();
+            $table->dateTime('read_at')->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ class CreateWhatsappNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('whatsapps');
+        Schema::dropIfExists('whatsapp_notifications');
     }
 }
