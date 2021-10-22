@@ -186,16 +186,28 @@ class WappinController extends Controller
 
     // Fungsi callback fitur chatbot
     public function callbackChatbot(Request $request){
-        if($request->has('messages')){
-            // 
-        }
-        
-        if($request->has('statuses')){
-            // 
-        }
+        $reqBody = new Request();
+        $reqBody->setMethod('POST');
+        $reqBody->request->add([            
+                'client_id' => '0317',
+                'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                'project_id' => '2036',
+                'recipient_number' => '6285853352902',
+                'message_content' => json_encode($request->all())
+            ]);
 
-        if($request->has('errors')){
-            // 
-        }
+        $this->sendMessage($reqBody);
+
+        // if($request->has('messages')){
+        //     // 
+        // }
+        
+        // if($request->has('statuses')){
+        //     // 
+        // }
+
+        // if($request->has('errors')){
+        //     // 
+        // }
     }
 }
