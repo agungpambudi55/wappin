@@ -30,8 +30,8 @@ class CreateWhatsappChatbotsTable extends Migration
 
             $table->string('error_code')->nullable();
             $table->text('error_title')->nullable();
-            $table->text('error_detail')->nullable();// Optional, error details provided if available/applicable 
-            $table->string('error_href')->nullable();   // Optional, location for error detail
+            $table->text('error_detail')->nullable();     // Optional, error details provided if available/applicable 
+            $table->string('error_href')->nullable();     // Optional, location for error detail
 
             $table->timestamps();
         });

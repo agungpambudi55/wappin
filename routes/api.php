@@ -26,5 +26,9 @@ Route::post('whatsapp-send-notification-media', 'WappinController@sendNotificati
 Route::post('whatsapp-send-message', 'WappinController@sendMessage');
 Route::post('whatsapp-send-message-media', 'WappinController@sendMessageMedia');
 Route::post('whatsapp-inquiry', 'WappinController@inquiry');
+
+// URL callback notifikasi didaftarin melalui portal Wappin pada menu Integration->Notification
 Route::post('whatsapp-callback-notification', 'WappinController@callbackNotification');
+
+// URL callback chatbot didaftarkan melalui tim Wappin
 Route::post('whatsapp-callback-chatbot', 'WappinController@callbackChatbot');

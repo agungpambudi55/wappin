@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\WhatsappNotification;
+use App\Models\WhatsappChatbot;
 use Illuminate\Support\Str;
 
 class WappinController extends Controller
@@ -186,28 +187,30 @@ class WappinController extends Controller
 
     // Fungsi callback fitur chatbot
     public function callbackChatbot(Request $request){
-        $reqBody = new Request();
-        $reqBody->setMethod('POST');
-        $reqBody->request->add([            
-                'client_id' => '0317',
-                'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                'project_id' => '2036',
-                'recipient_number' => '6285853352902',
-                'message_content' => json_encode($request->all())
-            ]);
+        $arrRequest = json_decode(json_encode($request->all()), true);
+        $messageContent = (($arrRequest['messages'][0])['text'])['body'];
 
-        $this->sendMessage($reqBody);
+        $message = new WhatsappChatbot();
+        $message->message_id = ($arrRequest['messages'][0])['id'];
+        $message->wa_id = ($arrRequest['contacts'][0])['wa_id'];
+        $message->wa_name = (($arrRequest['contacts'][0])['profile'])['name'];
+        $message->content = $messageContent;
+        $message->save();
 
-        // if($request->has('messages')){
-        //     // 
-        // }
-        
-        // if($request->has('statuses')){
-        //     // 
-        // }
+        $messageShipper01 = 'Halo Kerabat Shipper, apa yang anda perlukan?';
 
-        // if($request->has('errors')){
-        //     // 
-        // }
+        if($messageContent == 'Shipper'){
+            $reqBody = new Request();
+            $reqBody->setMethod('POST');
+            $reqBody->request->add([            
+                    'client_id' => '0317',
+                    'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                    'project_id' => '2036',
+                    'recipient_number' => '6285853352902',
+                    'message_content' => $messageShipper01
+                ]);
+
+            $this->sendMessage($reqBody);
+        }
     }
 }
