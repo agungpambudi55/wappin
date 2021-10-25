@@ -199,9 +199,6 @@ class WappinController extends Controller
 
         $message01 = 'Anda adalah *'.(($arrRequest['contacts'][0])['profile'])['name'].'*, mbok tulung moso lali jeneng wkwk.';
 
-        $messageShipper01 = 'Halo Kerabat Shipper, apa yang anda perlukan?';
-        $messageShipper02 = 'Muatan anda telah sampai ditempat bongkar';
-
         if($messageContent == 'Siapa saya?'){
             $reqBody = new Request();
             $reqBody->setMethod('POST');
@@ -214,7 +211,7 @@ class WappinController extends Controller
                 ]);
 
             $this->sendMessage($reqBody);
-        }else if($messageContent == 'Shipper'){
+        }else if(strpos($messageContent,'INV') !== false){
             $reqBody = new Request();
             $reqBody->setMethod('POST');
             $reqBody->request->add([            
@@ -222,19 +219,7 @@ class WappinController extends Controller
                     'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                     'project_id' => '2036',
                     'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
-                    'message_content' => $messageShipper01
-                ]);
-
-            $this->sendMessage($reqBody);
-        }else if($messageContent == 'Muatan'){
-            $reqBody = new Request();
-            $reqBody->setMethod('POST');
-            $reqBody->request->add([            
-                    'client_id' => '0317',
-                    'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                    'project_id' => '2036',
-                    'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
-                    'message_content' => $messageShipper02
+                    'message_content' => 'Tagihan dengan nomor '.$messageContent.' sudah lunas.'
                 ]);
 
             $this->sendMessage($reqBody);
