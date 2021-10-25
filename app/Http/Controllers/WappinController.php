@@ -197,9 +197,7 @@ class WappinController extends Controller
         $message->content = $messageContent;
         $message->save();
 
-        $messageShipper01 = `
-                Halo Kerabat Shipper, apa yang anda perlukan?
-                Silahkan ketik sesuai kebutuhan.`;
+        $messageShipper01 = 'Halo Kerabat Shipper, apa yang anda perlukan?';
 
         if($messageContent == 'Shipper'){
             $reqBody = new Request();
