@@ -199,10 +199,7 @@ class WappinController extends Controller
 
         $messageShipper01 = `
                 Halo Kerabat Shipper, apa yang anda perlukan?
-                Silahkan ketik sesuai kebutuhan.%0a
-                *Cek muatan*%0a
-                *Tagihan*%0a
-            `;
+                Silahkan ketik sesuai kebutuhan.`;
 
         if($messageContent == 'Shipper'){
             $reqBody = new Request();
