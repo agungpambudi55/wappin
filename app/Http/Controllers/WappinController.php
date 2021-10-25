@@ -198,6 +198,7 @@ class WappinController extends Controller
         $message->save();
 
         $messageShipper01 = 'Halo Kerabat Shipper, apa yang anda perlukan?';
+        $messageShipper02 = 'Muatan anda telah sampai ditempat bongkar';
 
         if($messageContent == 'Shipper'){
             $reqBody = new Request();
@@ -208,6 +209,18 @@ class WappinController extends Controller
                     'project_id' => '2036',
                     'recipient_number' => '6285853352902',
                     'message_content' => $messageShipper01
+                ]);
+
+            $this->sendMessage($reqBody);
+        }else if($messageContent == 'Muatan'){
+            $reqBody = new Request();
+            $reqBody->setMethod('POST');
+            $reqBody->request->add([            
+                    'client_id' => '0317',
+                    'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                    'project_id' => '2036',
+                    'recipient_number' => '6285853352902',
+                    'message_content' => $messageShipper02
                 ]);
 
             $this->sendMessage($reqBody);
