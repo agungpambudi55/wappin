@@ -197,10 +197,24 @@ class WappinController extends Controller
         $message->content = $messageContent;
         $message->save();
 
+        $message01 = 'Anda adalah *'.(($arrRequest['contacts'][0])['profile'])['name'].'*, mbok tulung moso lali jeneng wkwk.';
+
         $messageShipper01 = 'Halo Kerabat Shipper, apa yang anda perlukan?';
         $messageShipper02 = 'Muatan anda telah sampai ditempat bongkar';
 
-        if($messageContent == 'Shipper'){
+        if($messageContent == 'Siapa saya?'){
+            $reqBody = new Request();
+            $reqBody->setMethod('POST');
+            $reqBody->request->add([            
+                    'client_id' => '0317',
+                    'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
+                    'project_id' => '2036',
+                    'recipient_number' => '6285853352902',
+                    'message_content' => $message01
+                ]);
+
+            $this->sendMessage($reqBody);
+        }else if($messageContent == 'Shipper'){
             $reqBody = new Request();
             $reqBody->setMethod('POST');
             $reqBody->request->add([            
