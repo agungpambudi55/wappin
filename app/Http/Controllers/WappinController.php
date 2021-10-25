@@ -197,19 +197,9 @@ class WappinController extends Controller
         $message->content = $messageContent;
         $message->save();
 
-        $keyword01 = 'guru';
-        $keyword02 = 'wali murid';
-        $keyword03 = 'murid';
+        $messageShipper01 = 'Halo Kerabat Shipper, apa yang anda perlukan?';
 
-        $resKeyword01 = `
-                Halo Guru, apa yang anda perlukan? 
-                Silahkan ketik sesuai kebutuhan.%0a
-                *Absen*%0a
-                *Nilai*%0a
-                *Murid*%0a                
-            `;
-
-        if(strtolower($messageContent) == $keyword01){
+        if($messageContent == 'Shipper'){
             $reqBody = new Request();
             $reqBody->setMethod('POST');
             $reqBody->request->add([            
@@ -217,7 +207,7 @@ class WappinController extends Controller
                     'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                     'project_id' => '2036',
                     'recipient_number' => '6285853352902',
-                    'message_content' => $resKeyword01
+                    'message_content' => $messageShipper01
                 ]);
 
             $this->sendMessage($reqBody);
