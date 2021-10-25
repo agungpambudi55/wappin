@@ -209,7 +209,7 @@ class WappinController extends Controller
                     'client_id' => '0317',
                     'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                     'project_id' => '2036',
-                    'recipient_number' => '6285853352902',
+                    'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
                     'message_content' => $message01
                 ]);
 
@@ -221,7 +221,7 @@ class WappinController extends Controller
                     'client_id' => '0317',
                     'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                     'project_id' => '2036',
-                    'recipient_number' => '6285853352902',
+                    'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
                     'message_content' => $messageShipper01
                 ]);
 
@@ -233,7 +233,7 @@ class WappinController extends Controller
                     'client_id' => '0317',
                     'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
                     'project_id' => '2036',
-                    'recipient_number' => '6285853352902',
+                    'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
                     'message_content' => $messageShipper02
                 ]);
 
