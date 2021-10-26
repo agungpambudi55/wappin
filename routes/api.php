@@ -35,7 +35,9 @@ Route::post('whatsapp-callback-notification', 'WappinController@callbackNotifica
 // Chatbot SWC
 Route::post('whatsapp-get-token-swc', 'WappinController@getTokenSWC');
 Route::post('whatsapp-check-contact', 'WappinController@checkContact');
-
+Route::post('whatsapp-message-text', 'WappinController@messageText');
+Route::post('whatsapp-message-image', 'WappinController@messageImage');
+Route::post('whatsapp-message-document', 'WappinController@messageDocument');
 
 // URL callback chatbot didaftarkan melalui tim Wappin
 Route::post('whatsapp-callback-chatbot', 'WappinController@callbackChatbot');

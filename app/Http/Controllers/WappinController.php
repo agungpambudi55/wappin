@@ -283,7 +283,12 @@ class WappinController extends Controller
         return $this->getTokenSWC($requestBody)->getData()->data->token;
     }
     
-    // Fungsi mengecek apakah kontak valid atau tidak valid
+    // Fungsi mengecek status kontak
+    // - valid (input determined to be a valid WhatsApp user.)
+    // - tidak valid / invalid (input determined to not be a valid WhatsApp user or the phone number is in a bad format)
+    // - sedang diproses / processing (input is still being processed)
+    // Format input kontak valid ( 085853352902, +6285853352902, +62-858-5335-2902, +62 858 5335 2902 )
+    // Format input kontak tidak valid ( 6285853352902, +085853352902 )
     public function checkContact(Request $request)
     {
         // Mendapatkan token sebagai parameter Auth Bearer API SWC
@@ -296,18 +301,99 @@ class WappinController extends Controller
         // Konversi response http-client string ke array
         $arrRes = json_decode($response->body(), true);
 
-        if($response->status() == 200){    
+        if($response->status() == 200){
             return response()->json(['success'=>true, 'data'=>$arrRes['contacts'][0]['status']], $response->status());
         }else{
             return response()->json(['success'=>false], $response->status());
         }
     }
 
+    // Fungsi untuk mengirim pesan hanya berupa text tanpa media
+    public function messageText(Request $request){
+        // Mendapatkan token sebagai parameter Auth Bearer API SWC
+        $token = $this->getTokenSWCOnly();
+
+        // Request dengan http-client ke SWC
+        $requestBody = new Request([
+                'preview_url' => 'false',           // default false (tidak ada perbedaan true / false)
+                'recipient_type' => 'individual',   // default individual
+                'type' => 'text',                   // default text
+                'to' => $request->recipient_number,
+                'text' => array('body' => $request->message_content)
+            ]);
+        $response = Http::withToken($token)->post(env('SWC_URL').'/v1/messages',  $requestBody->all());
+
+        // Konversi response http-client string ke array
+        $arrRes = json_decode($response->body(), true);
+
+        if($response->status() == 201){
+            return response()->json(['success'=>true, 'data'=>array('message_id'=>$arrRes['messages'][0]['id'])], 201);
+        }else{
+            return response()->json(['success'=>false, 'message'=>$arrRes['errors'][0]['title']], $response->status());
+        }        
+    }
+
+    // Fungsi untuk mengirim pesan dengan media gambar
+    public function messageImage(Request $request){
+        // Mendapatkan token sebagai parameter Auth Bearer API SWC
+        $token = $this->getTokenSWCOnly();
+
+        // Request dengan http-client ke SWC
+        $requestBody = new Request([
+                'recipient_type' => 'individual',
+                'type' => 'image', 
+                'to' => $request->recipient_number,
+                'image' => array(
+                    'link' => $request->media_url,
+                    'caption' => $request->message_content
+                )
+            ]);
+
+        $response = Http::withToken($token)->post(env('SWC_URL').'/v1/messages',  $requestBody->all());
+
+        // Konversi response http-client string ke array
+        $arrRes = json_decode($response->body(), true);
+
+        if($response->status() == 201){
+            return response()->json(['success'=>true, 'data'=>array('message_id'=>$arrRes['messages'][0]['id'])], 201);
+        }else{
+            return response()->json(['success'=>false, 'message'=>$arrRes['errors'][0]['title']], $response->status());
+        }        
+    }
+
+    // Fungsi untuk mengirim pesan dengan media document
+    public function messageDocument(Request $request){
+        // Mendapatkan token sebagai parameter Auth Bearer API SWC
+        $token = $this->getTokenSWCOnly();
+
+        // Request dengan http-client ke SWC
+        $requestBody = new Request([
+                'recipient_type' => 'individual',
+                'type' => 'image', 
+                'to' => $request->recipient_number,
+                'image' => array(
+                    'link' => $request->media_url,
+                    'caption' => $request->message_content
+                )
+            ]);
+
+        $response = Http::withToken($token)->post(env('SWC_URL').'/v1/messages',  $requestBody->all());
+
+        // Konversi response http-client string ke array
+        $arrRes = json_decode($response->body(), true);
+
+        if($response->status() == 201){
+            return response()->json(['success'=>true, 'data'=>array('message_id'=>$arrRes['messages'][0]['id'])], 201);
+        }else{
+            return response()->json(['success'=>false, 'message'=>$arrRes['errors'][0]['title']], $response->status());
+        }        
+    }
+
     // Fungsi callback fitur chatbot
     public function callbackChatbot(Request $request)
     {
         $arrRequest = json_decode(json_encode($request->all()), true);
-        $messageContent = (($arrRequest['messages'][0])['text'])['body'];
+        $messageContent = strtolower((($arrRequest['messages'][0])['text'])['body']);
 
         $message = new WhatsappChatbot();
         $message->message_id = ($arrRequest['messages'][0])['id'];
@@ -316,32 +402,20 @@ class WappinController extends Controller
         $message->content = $messageContent;
         $message->save();
 
-        $message01 = 'Anda adalah *'.(($arrRequest['contacts'][0])['profile'])['name'].'*, mbok tulung moso lali jeneng wkwk.';
-
-        if($messageContent == 'Siapa saya?'){
-            $reqBody = new Request();
-            $reqBody->setMethod('POST');
-            $reqBody->request->add([            
-                    'client_id' => '0317',
-                    'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                    'project_id' => '2036',
+        if($messageContent == 'siapa saya?'){
+            $reqBody = new Request([            
                     'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
-                    'message_content' => $message01
+                    'message_content' => 'Anda adalah *'.(($arrRequest['contacts'][0])['profile'])['name'].'*, mbok tulung moso lali jeneng wkwk.'
                 ]);
 
-            $this->sendMessage($reqBody);
-        }else if(strpos($messageContent,'INV') !== false){
-            $reqBody = new Request();
-            $reqBody->setMethod('POST');
-            $reqBody->request->add([            
-                    'client_id' => '0317',
-                    'secret_key' => 'dbd9c735281a4a617084795bf5ca8c4b506aa741',
-                    'project_id' => '2036',
+            $this->messageText($reqBody);
+        }else if(strpos($messageContent,'inv') !== false){
+            $reqBody = new Request([
                     'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
-                    'message_content' => 'Tagihan dengan nomor *'.$messageContent.'* sudah lunas.'
+                    'message_content' => 'Tagihan dengan nomor *'.strtoupper($messageContent).'* sudah lunas.'
                 ]);
 
-            $this->sendMessage($reqBody);
+            $this->messageText($reqBody);
         }
     }
 }
