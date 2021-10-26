@@ -403,19 +403,28 @@ class WappinController extends Controller
         $message->save();
 
         if($messageContent == 'siapa saya?'){
-            $reqBody = new Request([            
-                    'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
-                    'message_content' => 'Anda adalah *'.(($arrRequest['contacts'][0])['profile'])['name'].'*, mbok tulung moso lali jeneng wkwk.'
-                ]);
-
-            $this->messageText($reqBody);
+            $replyMsg = 'Anda adalah *'.(($arrRequest['contacts'][0])['profile'])['name'].'*, mbok tulung moso lali jeneng wkwk.';
+        }else if($messageContent == 'tanya'){
+            $replyMsg = 'Terima kasih, anda telah terhubung dengan chatbot. Silahkan balas dengan mengetik sesuai permintaan atau pilihan yang ada dalam tanda kurung. Anda sebagai apa? ( *_Shipper_* / *_Transporter_* )';
+        }else if($messageContent == 'shipper'){
+            $replyMsg = 'Halo Kerabat Shipper, apa yang anda perlukan? (*_Informasi Muatan_* / *_Tagihan Muatan_*)';
+        }else if($messageContent == 'informasi muatan'){
+            $replyMsg = 'Masukkan nomor DO anda, contoh DO-AGRS-0000-11.';
+        }else if(strpos($messageContent,'do-agrs') !== false){
+            $replyMsg = 'Muatan dengan nomor *'.strtoupper($messageContent).'* sedang dalam perjalanan.';
+        }else if($messageContent == 'tagihan muatan'){
+            $replyMsg = 'Masukkan nomor DO anda, contoh DO-AGRS-0000-11.';
         }else if(strpos($messageContent,'inv') !== false){
-            $reqBody = new Request([
-                    'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
-                    'message_content' => 'Tagihan dengan nomor *'.strtoupper($messageContent).'* sudah lunas.'
-                ]);
-
-            $this->messageText($reqBody);
+            $replyMsg = 'Tagihan dengan nomor *'.strtoupper($messageContent).'* sudah lunas.';
+        }else{
+            $replyMsg = 'Halo, ada yang bisa dibantu? Balas dengan mengetik *_tanya_* jika mau bertanya.';
         }
+
+        $reqBody = new Request([
+            'recipient_number' => ($arrRequest['contacts'][0])['wa_id'],
+            'message_content' => $replyMsg
+        ]);
+
+        $this->messageText($reqBody);
     }
 }
