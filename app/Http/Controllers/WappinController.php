@@ -410,12 +410,14 @@ class WappinController extends Controller
             $replyMsg = 'Terima kasih, anda telah terhubung dengan chatbot. Silahkan balas dengan mengetik sesuai permintaan atau pilihan yang ada dalam tanda kurung. Untuk mengakhiri pesan dengan mengetik *_selesai_*. Anda sebagai apa? ( *_Shipper_* / *_Transporter_* )';
         }else if($messageContent == 'shipper'){
             $replyMsg = 'Halo Kerabat Shipper, apa yang anda perlukan? ( *_Informasi Muatan_* / *_Tagihan Muatan_* )';
+        }else if($messageContent == 'transporter'){
+            $replyMsg = 'Halo Kerabat Transporter.';
         }else if($messageContent == 'informasi muatan'){
             $replyMsg = 'Masukkan nomor DO anda, contoh DO-AGRS-0000-11.';
         }else if(strpos($messageContent,'do-agrs') !== false){
             $replyMsg = 'Muatan dengan nomor *'.strtoupper($messageContent).'* sedang dalam perjalanan.';
         }else if($messageContent == 'tagihan muatan'){
-            $replyMsg = 'Masukkan nomor DO anda, contoh DO-AGRS-0000-11.';
+            $replyMsg = 'Masukkan nomor tagihan anda, contoh INV/111/10/2021.';
         }else if(strpos($messageContent,'inv') !== false){
             $replyMsg = 'Tagihan dengan nomor *'.strtoupper($messageContent).'* sudah lunas.';
         }else{
