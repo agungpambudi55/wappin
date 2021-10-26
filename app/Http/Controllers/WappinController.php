@@ -404,8 +404,10 @@ class WappinController extends Controller
 
         if($messageContent == 'siapa saya?'){
             $replyMsg = 'Anda adalah *'.(($arrRequest['contacts'][0])['profile'])['name'].'*, mbok tulung moso lali jeneng wkwk.';
+        }else if($messageContent == 'selesai'){
+            $replyMsg = 'Terima kasih Kerabat. Semoga diberikan kesehatan selalu.';
         }else if($messageContent == 'tanya'){
-            $replyMsg = 'Terima kasih, anda telah terhubung dengan chatbot. Silahkan balas dengan mengetik sesuai permintaan atau pilihan yang ada dalam tanda kurung. Anda sebagai apa? ( *_Shipper_* / *_Transporter_* )';
+            $replyMsg = 'Terima kasih, anda telah terhubung dengan chatbot. Silahkan balas dengan mengetik sesuai permintaan atau pilihan yang ada dalam tanda kurung. Untuk mengakhiri pesan dengan mengetik *_selesai_*. Anda sebagai apa? ( *_Shipper_* / *_Transporter_* )';
         }else if($messageContent == 'shipper'){
             $replyMsg = 'Halo Kerabat Shipper, apa yang anda perlukan? (*_Informasi Muatan_* / *_Tagihan Muatan_*)';
         }else if($messageContent == 'informasi muatan'){
