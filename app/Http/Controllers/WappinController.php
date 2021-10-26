@@ -74,7 +74,7 @@ class WappinController extends Controller
         $requestBody = new Request(['client_id'=>env('CLIENT_ID'), 'secret_key'=>env('SECRET_KEY')]);
 
         return $this->getToken($requestBody)->getData()->data->token;
-    }    
+    }
 
     // Fungsi untuk mengirim notifikasi atau blast berisi hanya teks, menggunakan template yang sudah disetujui Facebook
     public function sendNotification(Request $request)
@@ -250,12 +250,13 @@ class WappinController extends Controller
     }
 
     // SWC Chatbot
-
-    // Fungsi login untuk mendapatkan token
+    // Fungsi untuk mendapatkan token SWC
     public function getTokenSWC(Request $request)
     {
+        // Request dengan http-client ke Wappin
         $response = Http::withBasicAuth($request->username, $request->password)->post(env('SWC_URL').'/v1/users/login');
 
+        // Konversi response http-client string ke array
         $arrRes = json_decode($response->body(), true);
 
         if($response->status() == 200){
@@ -274,11 +275,32 @@ class WappinController extends Controller
         }
     }
 
+    // Fungsi untuk mendapatkan informasi token swc saja dimana parameter username & password berasal dari file .env
+    private function getTokenSWCOnly(){
+        // Membuat request body param username & password
+        $requestBody = new Request(['username'=>env('USERNAME_SWC'), 'password'=>env('PASSWORD_SWC')]);
+
+        return $this->getTokenSWC($requestBody)->getData()->data->token;
+    }
+    
     // Fungsi mengecek apakah kontak valid atau tidak valid
     public function checkContact(Request $request)
     {
-        
-        return '';
+        // Mendapatkan token sebagai parameter Auth Bearer API SWC
+        $token = $this->getTokenSWCOnly();
+
+        // Request dengan http-client ke SWC
+        $requestBody = new Request(['blocking'=>'no_wait', 'contacts'=>array($request->contact)]);
+        $response = Http::withToken($token)->post(env('SWC_URL').'/v1/contacts',  $requestBody->all());
+
+        // Konversi response http-client string ke array
+        $arrRes = json_decode($response->body(), true);
+
+        if($response->status() == 200){    
+            return response()->json(['success'=>true, 'data'=>$arrRes['contacts'][0]['status']], $response->status());
+        }else{
+            return response()->json(['success'=>false], $response->status());
+        }
     }
 
     // Fungsi callback fitur chatbot
