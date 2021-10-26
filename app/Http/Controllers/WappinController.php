@@ -407,9 +407,9 @@ class WappinController extends Controller
         }else if($messageContent == 'selesai'){
             $replyMsg = 'Terima kasih Kerabat. Semoga diberikan kesehatan selalu.';
         }else if($messageContent == 'tanya'){
-            $replyMsg = 'Terima kasih, anda telah terhubung dengan chatbot. Silahkan balas dengan mengetik sesuai permintaan atau pilihan yang ada dalam tanda kurung. Untuk mengakhiri pesan dengan mengetik *selesai*. Anda sebagai apa? ( *Shipper* / *Transporter* )';
+            $replyMsg = 'Terima kasih, anda telah terhubung dengan chatbot. Silahkan balas dengan mengetik sesuai permintaan atau pilihan yang ada dalam tanda kurung. Untuk mengakhiri pesan dengan mengetik *_selesai_*. Anda sebagai apa? ( *_Shipper_* / *_Transporter_* )';
         }else if($messageContent == 'shipper'){
-            $replyMsg = 'Halo Kerabat Shipper, apa yang anda perlukan? (*Informasi Muatan* / *Tagihan Muatan*)';
+            $replyMsg = 'Halo Kerabat Shipper, apa yang anda perlukan? ( *_Informasi Muatan_* / *_Tagihan Muatan_* )';
         }else if($messageContent == 'informasi muatan'){
             $replyMsg = 'Masukkan nomor DO anda, contoh DO-AGRS-0000-11.';
         }else if(strpos($messageContent,'do-agrs') !== false){
